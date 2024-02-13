@@ -11,12 +11,11 @@ namespace _2048ConsoleEdition
         private readonly IInput _input;
         private readonly ISaveProvider _saveProvider;
         
-        private Field Field;
-        private GameState State = GameState.Normal;
+        private Field _field;
+        private GameState _state = GameState.Normal;
 
         public int Score { get; private set; }
         public int BestScore { get; private set; }
-        
         
         public Game()
         {
@@ -40,8 +39,9 @@ namespace _2048ConsoleEdition
 
         private void Reset()
         {
-            Field = new Field(Configuration.RowCount, Configuration.ColumnCount);
-            State = GameState.Normal;
+            _field = new Field(Configuration.RowCount, Configuration.ColumnCount);
+            _state = GameState.Normal;
+            
             Score = 0;
         }
 
@@ -64,56 +64,56 @@ namespace _2048ConsoleEdition
 
         private void Start()
         {
-            Field.PutNewValue();
+            _field.PutNewValue();
             
             Update();
         }
         
         private void Update()
         {
-            while (State is not GameState.QuitAccepted)
+            while (_state is not GameState.QuitAccepted)
             {
-                if (State is GameState.RestartAccepted)
+                if (_state is GameState.RestartAccepted)
                 {
                     Restart();
                     return;
                 }
                 
-                Field.Update();
+                _field.Update();
 
-                _drawer.Draw(this, State, Field);
-                _input.Wait();
+                _drawer.Draw(this, _state, _field);
+                _input.WaitForUserInput();
             }
         }
         
         private void RequestedQuit()
         {
-            State = GameState.QuitRequested;
+            _state = GameState.QuitRequested;
         }
 
         private void RequestRestart()
         {
-            State = GameState.RestartRequested;
+            _state = GameState.RestartRequested;
         }
 
         private void ConfirmRequest()
         {
-            State = State switch
+            _state = _state switch
             {
                 GameState.RestartRequested => GameState.RestartAccepted,
                 GameState.QuitRequested => GameState.QuitAccepted,
-                _ => State
+                _ => _state
             };
         }
 
         private void CancelRequest()
         {
-            State = GameState.Normal;
+            _state = GameState.Normal;
         }
 
         private void Move(Direction dir)
         {
-            Field.Move(dir, out var score);
+            _field.Move(dir, out var score);
             
             Score += score;
             if (Score > BestScore)

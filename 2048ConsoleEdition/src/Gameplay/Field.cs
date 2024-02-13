@@ -5,7 +5,7 @@ public class Field
     public readonly int[,] Cells;
     public FieldState State = FieldState.Normal;
     
-    private readonly Random random = new Random();
+    private readonly Random _random = new Random();
     
     private int RowCount => Cells.GetLength(0);
     private int ColCount => Cells.GetLength(0);
@@ -34,7 +34,7 @@ public class Field
             return;
         }
 
-        var cellToPutValue = random.Next(0, emptyCells.Count);
+        var cellToPutValue = _random.Next(0, emptyCells.Count);
         Cells[emptyCells[cellToPutValue].Item1, emptyCells[cellToPutValue].Item2] = 2;
     }
     

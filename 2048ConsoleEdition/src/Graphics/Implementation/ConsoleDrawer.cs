@@ -4,8 +4,8 @@ namespace _2048ConsoleEdition.Graphics;
 
 public class ConsoleDrawer : IDrawer
 {
-    private static char VerticalDivider = '|';
-    private static string HorizontalLines = "----";
+    private const char VerticalDivider = '|';
+    private const string HorizontalLines = "----";
     
     public ConsoleDrawer()
     {

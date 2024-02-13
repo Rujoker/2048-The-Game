@@ -10,7 +10,7 @@ public class ConsoleInput : IInput
     public Action? OnConfirmed { get; set; }
     public Action? OnCanceled { get; set; }
     
-    public void Wait()
+    public void WaitForUserInput()
     {
         var pressedButton = Console.ReadKey(true);
         

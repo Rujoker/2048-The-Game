@@ -10,5 +10,5 @@ public interface IInput
     Action? OnConfirmed { get; set; }
     Action? OnCanceled { get; set; }
 
-    void Wait();
+    void WaitForUserInput();
 }
