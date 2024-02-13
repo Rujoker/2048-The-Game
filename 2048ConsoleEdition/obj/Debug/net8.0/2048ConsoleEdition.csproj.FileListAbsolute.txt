@@ -1,0 +1,15 @@
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/bin/Debug/net8.0/2048ConsoleEdition
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/bin/Debug/net8.0/2048ConsoleEdition.deps.json
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/bin/Debug/net8.0/2048ConsoleEdition.runtimeconfig.json
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/bin/Debug/net8.0/2048ConsoleEdition.dll
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/bin/Debug/net8.0/2048ConsoleEdition.pdb
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.AssemblyInfoInputs.cache
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.AssemblyInfo.cs
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.csproj.CoreCompileInputs.cache
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.dll
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/refint/2048ConsoleEdition.dll
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.pdb
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.genruntimeconfig.cache
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/ref/2048ConsoleEdition.dll
+/Users/sergeypchelintsev/RiderProjects/2048ConsoleEdition/2048ConsoleEdition/obj/Debug/net8.0/2048ConsoleEdition.sourcelink.json
