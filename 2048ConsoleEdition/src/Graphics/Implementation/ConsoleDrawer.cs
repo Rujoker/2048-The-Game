@@ -5,7 +5,8 @@ namespace _2048ConsoleEdition.Graphics;
 public class ConsoleDrawer : IDrawer
 {
     private const char VerticalDivider = '|';
-    private const string HorizontalLines = "----";
+    private const char HorizontalLine = '-';
+    private const int CellLength = 4;
     
     public ConsoleDrawer()
     {
@@ -36,8 +37,9 @@ public class ConsoleDrawer : IDrawer
         var rowCount = field.Cells.GetLength(0);
         var colCount = field.Cells.GetLength(1);
 
+        var horizontalSubDivider = $"{string.Join("", Enumerable.Repeat(HorizontalLine, CellLength))}";
         var horizontalDivider = VerticalDivider 
-                                + string.Join(VerticalDivider, Enumerable.Repeat(HorizontalLines, colCount)) 
+                                + string.Join(VerticalDivider, Enumerable.Repeat(horizontalSubDivider, colCount)) 
                                 + VerticalDivider;
 
         Console.WriteLine(horizontalDivider);
@@ -106,44 +108,44 @@ public class ConsoleDrawer : IDrawer
 
     private static (string, ConsoleColor) GetCellInfo(int value)
     {
-        var result = ($"{value, 4}", ConsoleColor.White);
+        var result = ($"{value, CellLength}", ConsoleColor.White);
         switch (value)
         {
             case 0:
-                result = ("    ", ConsoleColor.White);
+                result = ($"{"", CellLength}", ConsoleColor.White);
                 break;
             case 2:
-                result = ($"{value, 4}", ConsoleColor.DarkGray);
+                result = ($"{value, CellLength}", ConsoleColor.DarkGray);
                 break;
             case 4:
-                result = ($"{value, 4}", ConsoleColor.Gray);
+                result = ($"{value, CellLength}", ConsoleColor.Gray);
                 break;
             case 8:
-                result = ($"{value, 4}", ConsoleColor.White);
+                result = ($"{value, CellLength}", ConsoleColor.White);
                 break;
             case 16:
-                result = ($"{value, 4}", ConsoleColor.DarkMagenta);
+                result = ($"{value, CellLength}", ConsoleColor.DarkMagenta);
                 break;
             case 32:
-                result = ($"{value, 4}", ConsoleColor.Magenta);
+                result = ($"{value, CellLength}", ConsoleColor.Magenta);
                 break;
             case 64:
-                result = ($"{value, 4}", ConsoleColor.DarkRed);
+                result = ($"{value, CellLength}", ConsoleColor.DarkRed);
                 break;
             case 128:
-                result = ($"{value, 4}", ConsoleColor.Red);
+                result = ($"{value, CellLength}", ConsoleColor.Red);
                 break;
             case 256:
-                result = ($"{value, 4}", ConsoleColor.DarkGreen);
+                result = ($"{value, CellLength}", ConsoleColor.DarkGreen);
                 break;
             case 512:
-                result = ($"{value, 4}", ConsoleColor.Green);
+                result = ($"{value, CellLength}", ConsoleColor.Green);
                 break;
             case 1024:
-                result = ($"{value}", ConsoleColor.DarkYellow);
+                result = ($"{value, CellLength}", ConsoleColor.DarkYellow);
                 break;
             case 2048:
-                result = ($"{value}", ConsoleColor.Yellow);
+                result = ($"{value, CellLength}", ConsoleColor.Yellow);
                 break;
         }
         return result;
