@@ -8,7 +8,7 @@ public class Field
     private readonly Random _random = new Random();
     
     private int RowCount => Cells.GetLength(0);
-    private int ColCount => Cells.GetLength(0);
+    private int ColCount => Cells.GetLength(1);
 
     public Field(int rowCount, int columnCount)
     {
@@ -35,7 +35,8 @@ public class Field
         }
 
         var cellToPutValue = _random.Next(0, emptyCells.Count);
-        Cells[emptyCells[cellToPutValue].Item1, emptyCells[cellToPutValue].Item2] = 2;
+        Cells[emptyCells[cellToPutValue].Item1, emptyCells[cellToPutValue].Item2] = 
+            _random.NextSingle() < Configuration.StartValueBigChance ? 4 : 2;
     }
     
     public void Move(Direction direction, out int score)
@@ -56,60 +57,60 @@ public class Field
 
         for (var i = 0; i < outterCount; i++)
         {
-            for (var j = innerStart; IsValidIndex(j); j = ShiftIndexBack(j))
+            for (var j = innerStart; IsValidIndex(j, innerCount); j = ShiftIndexBack(j, isIncreasing))
             {
-                if (GetValue(i, j) == 0)
+                if (GetValue(Cells, i, j, isHorizontal) == 0)
                 {
                     continue;
                 }
 
-                var k = ShiftIndex(j);
-                while (IsValidIndex(k) && GetValue(i, k) == 0)
+                var k = ShiftIndex(j, isIncreasing);
+                while (IsValidIndex(k, innerCount) && GetValue(Cells, i, k, isHorizontal) == 0)
                 {
-                    k = ShiftIndex(k);
+                    k = ShiftIndex(k, isIncreasing);
                 }
 
-                if (IsValidIndex(k) && GetValue(i, k) == GetValue(i, j))
+                if (IsValidIndex(k, innerCount) && GetValue(Cells, i, k, isHorizontal) == GetValue(Cells, i, j, isHorizontal))
                 {
-                    var newValue = GetValue(i, k) * 2;
-                    SetValue(i, k, newValue);
-                    SetValue(i, j, 0);
+                    var newValue = GetValue(Cells, i, k, isHorizontal) * 2;
+                    SetValue(Cells, i, k, newValue, isHorizontal);
+                    SetValue(Cells, i, j, 0, isHorizontal);
 
                     State = FieldState.Moved;
                     score += newValue;
                 }
                 else
                 {
-                    k = ShiftIndexBack(k);
+                    k = ShiftIndexBack(k, isIncreasing);
                     if (k != j)
                     {
                         State = FieldState.Moved; 
                     }
 
-                    var value = GetValue(i, j);
-                    SetValue(i, j, 0);
-                    SetValue(i, k, value);
+                    var value = GetValue(Cells, i, j, isHorizontal);
+                    SetValue(Cells, i, j, 0, isHorizontal);
+                    SetValue(Cells, i, k, value, isHorizontal);
                 }
             }
         }
 
         return;
         
-        int ShiftIndex(int innerIndex) => isIncreasing ? innerIndex - 1 : innerIndex + 1;
-        int ShiftIndexBack(int innerIndex) => isIncreasing ? innerIndex + 1 : innerIndex - 1;
-        int GetValue(int i, int j) => isHorizontal ? Cells[i, j] : Cells[j, i];
-        void SetValue(int i, int j, int v)
+        static int ShiftIndex(int innerIndex, bool isIncreasing) => isIncreasing ? innerIndex - 1 : innerIndex + 1;
+        static int ShiftIndexBack(int innerIndex, bool isIncreasing) => isIncreasing ? innerIndex + 1 : innerIndex - 1;
+        static int GetValue(int[,] cells, int i, int j, bool isHorizontal) => isHorizontal ? cells[i, j] : cells[j, i];
+        static void SetValue(int[,] cells, int i, int j, int v, bool isHorizontal)
         {
             if (isHorizontal)
             {
-                Cells[i, j] = v;
+                cells[i, j] = v;
             }
             else
             {
-                Cells[j, i] = v;
+                cells[j, i] = v;
             }
         }
-        bool IsValidIndex(int index) => 0 <= index && index <= innerCount - 1;
+        static bool IsValidIndex(int index, int innerCount) => 0 <= index && index <= innerCount - 1;
     }
 
     public void Update()
@@ -138,7 +139,14 @@ public class Field
 
     private bool IsWin()
     {
-        return Cells.Cast<int>().Any(cell => cell >= Configuration.MaxValue);
+        foreach (var cell in Cells)
+        {
+            if (cell >= Configuration.MaxValue)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private bool HasMoves()

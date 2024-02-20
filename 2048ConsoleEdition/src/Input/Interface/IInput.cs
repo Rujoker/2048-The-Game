@@ -9,6 +9,7 @@ public interface IInput
     Action? OnRestartRequested { get; set; }
     Action? OnConfirmed { get; set; }
     Action? OnCanceled { get; set; }
+    Action? OnForcedQuit { get; set; }
 
     void WaitForUserInput();
 }

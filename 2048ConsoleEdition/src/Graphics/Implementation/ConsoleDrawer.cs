@@ -7,10 +7,18 @@ public class ConsoleDrawer : IDrawer
     private const char VerticalDivider = '|';
     private const char HorizontalLine = '-';
     private const int CellLength = 4;
+
+    private readonly string _horizontalSubDivider;
+    
+    private string _horizontalDivider;
+    private int _columnsCount;
     
     public ConsoleDrawer()
     {
         Console.CursorVisible = false;
+        
+        _horizontalDivider = HorizontalLine.ToString();
+        _horizontalSubDivider = $"{string.Join("", Enumerable.Repeat(HorizontalLine, CellLength))}";
     }
 
     public void DrawLoader()
@@ -35,25 +43,21 @@ public class ConsoleDrawer : IDrawer
     private void DrawField(Field field)
     {
         var rowCount = field.Cells.GetLength(0);
-        var colCount = field.Cells.GetLength(1);
 
-        var horizontalSubDivider = $"{string.Join("", Enumerable.Repeat(HorizontalLine, CellLength))}";
-        var horizontalDivider = VerticalDivider 
-                                + string.Join(VerticalDivider, Enumerable.Repeat(horizontalSubDivider, colCount)) 
-                                + VerticalDivider;
+        TryToUpdateColumnsCount(field.Cells.GetLength(1));
 
-        Console.WriteLine(horizontalDivider);
+        Console.WriteLine(_horizontalDivider);
         
         for (var i = 0; i < rowCount; i++)
         {
-            for (var j = 0; j < colCount; j++)
+            for (var j = 0; j < _columnsCount; j++)
             {
                 Console.Write(VerticalDivider);
                 DrawCell(field.Cells[i, j]);
             }
             
             Console.WriteLine(VerticalDivider);
-            Console.WriteLine(horizontalDivider);
+            Console.WriteLine(_horizontalDivider);
         }
     }
 
@@ -89,7 +93,7 @@ public class ConsoleDrawer : IDrawer
         }
     }
 
-    public void DrawServiceMessages(GameState gameState)
+    private void DrawServiceMessages(GameState gameState)
     {
         switch (gameState)
         {
@@ -103,6 +107,17 @@ public class ConsoleDrawer : IDrawer
                 Console.WriteLine("Quit? (Y/N)");
                 Console.ResetColor();
                 break;
+        }
+    }
+    
+    private void TryToUpdateColumnsCount(int fieldColumnsCount)
+    {
+        if (_columnsCount != fieldColumnsCount)
+        {
+            _columnsCount = fieldColumnsCount;
+            _horizontalDivider = VerticalDivider 
+                                 + string.Join(VerticalDivider, Enumerable.Repeat(_horizontalSubDivider, _columnsCount)) 
+                                 + VerticalDivider;
         }
     }
 

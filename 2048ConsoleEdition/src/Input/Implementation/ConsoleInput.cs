@@ -9,6 +9,12 @@ public class ConsoleInput : IInput
     public Action? OnRestartRequested { get; set; }
     public Action? OnConfirmed { get; set; }
     public Action? OnCanceled { get; set; }
+    public Action? OnForcedQuit { get; set; }
+
+    public ConsoleInput()
+    {
+        Console.CancelKeyPress += (sender, args) => OnForcedQuit?.Invoke();
+    }
     
     public void WaitForUserInput()
     {

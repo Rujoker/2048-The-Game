@@ -10,22 +10,27 @@ namespace _2048ConsoleEdition
         private readonly IDrawer _drawer;
         private readonly IInput _input;
         private readonly ISaveProvider _saveProvider;
+        private readonly Field _field;
         
-        private Field _field;
-        private GameState _state = GameState.Normal;
+        private GameState _state;
 
         public int Score { get; private set; }
         public int BestScore { get; private set; }
+
+        public bool IsPlaying => _state != GameState.QuitAccepted;
         
-        public Game()
+        public Game(IDrawer drawer, IInput input, ISaveProvider saveProvider)
         {
-            _drawer = new ConsoleDrawer();
-            _input = new ConsoleInput();
-            _saveProvider = new SaveProvider();
+            _drawer = drawer;
+            _input = input;
+            _saveProvider = saveProvider;
+            
+            _field = new Field(Configuration.RowCount, Configuration.ColumnCount);
+            _state = GameState.Normal;
+            
+            Score = 0;
             
             SubscribeToInputEvents();
-
-            Reset();
         }
 
         private void SubscribeToInputEvents()
@@ -35,20 +40,17 @@ namespace _2048ConsoleEdition
             _input.OnRestartRequested += RequestRestart;
             _input.OnConfirmed += ConfirmRequest;
             _input.OnCanceled += CancelRequest;
-        }
-
-        private void Reset()
+            _input.OnForcedQuit += Quit;
+        }  
+        
+        private void UnsubscribeFromInputEvents()
         {
-            _field = new Field(Configuration.RowCount, Configuration.ColumnCount);
-            _state = GameState.Normal;
-            
-            Score = 0;
-        }
-
-        private void Restart()
-        {
-            Reset();
-            Start();
+            _input.OnMoveRequested -= Move;
+            _input.OnQuitRequested -= RequestedQuit;
+            _input.OnRestartRequested -= RequestRestart;
+            _input.OnConfirmed -= ConfirmRequest;
+            _input.OnCanceled -= CancelRequest;
+            _input.OnForcedQuit -= Quit;
         }
 
         public async Task RunAsync()
@@ -59,31 +61,30 @@ namespace _2048ConsoleEdition
             
             BestScore = _saveProvider.BestScore;
 
-            Start();
+            await Start();
         }
 
-        private void Start()
+        private async Task Start()
         {
             _field.PutNewValue();
+            _field.PutNewValue();
             
-            Update();
+            await Update();
         }
         
-        private void Update()
+        private async Task Update()
         {
-            while (_state is not GameState.QuitAccepted)
+            while (_state is not GameState.QuitAccepted and not GameState.RestartAccepted)
             {
-                if (_state is GameState.RestartAccepted)
-                {
-                    Restart();
-                    return;
-                }
-                
                 _field.Update();
 
                 _drawer.Draw(this, _state, _field);
                 _input.WaitForUserInput();
             }
+
+            UnsubscribeFromInputEvents();
+
+            await Save();
         }
         
         private void RequestedQuit()
@@ -119,9 +120,18 @@ namespace _2048ConsoleEdition
             if (Score > BestScore)
             {
                 BestScore = Score;
-                _saveProvider.BestScore = Score;
-                _saveProvider.SaveAsync();
             }
+        }
+
+        private async Task Save()
+        {
+            _saveProvider.BestScore = Score;
+            await _saveProvider.SaveAsync();
+        }
+
+        private void Quit()
+        {
+            Save();
         }
     }
 }
